@@ -1,4 +1,4 @@
-import { createRoom,getData,joinRoom,leaveRoom,getData} from "./rooms";
+const {createRoom,joinRoom,leaveRoom,getData}=require("./rooms");
 
 module.exports = (io) => {
     //some user made a connection the website
@@ -13,7 +13,9 @@ module.exports = (io) => {
             //send a message for the user , with room id
             socket.emit("roomCreated",roomid);
             //send to all users data
-            let data = getData();
+            let data = {};
+            data=getData();
+            
             io.to(roomid).emit("roomUpdated",data);
                 })
 
@@ -22,6 +24,8 @@ module.exports = (io) => {
             if(joinRoom(socket.id,playerName,roomId)){
             socket.join(roomId);
             socket.emit("roomJoined");
+            let data ={};
+            data=getData();
             io.to(roomId).emit("roomUpdated",data);
             }
         })
@@ -30,7 +34,14 @@ module.exports = (io) => {
         socket.on('disconnecting', () => {
             const [roomId] = [...socket.rooms].filter(id => id !== socket.id);
             leaveRoom(socket.id,roomId);
+            let data={};
+            data=getData();
             io.to(roomId).emit("roomUpdated",data);
         })
+
+         socket.on('disconnect', () => {
+            console.log(`Socket disconnected: ${socket.id}`);
+    });
+
     });
 }

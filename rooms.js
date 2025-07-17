@@ -6,6 +6,7 @@ const rooms = {
     //   // etc.
     // ],
     // animal: 'lion',
+    //}
 }
 
 const animals =  [
@@ -44,7 +45,7 @@ let createRoom = (hostId,hostName) => {
     let animal = animals[index];
 
     rooms[roomId] = {
-        host: playerId,
+        host: hostId,
         players: [{id: hostId,name: hostName,knowsAnimal:true}],
         animal:animal,
     };

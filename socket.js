@@ -1,4 +1,4 @@
-const {createRoom,joinRoom,leaveRoom,getData}=require("./rooms");
+const {createRoom,joinRoom,leaveRoom,getData,getPlayerData}=require("./rooms");
 
 module.exports = (io) => {
     //some user made a connection the website
@@ -11,11 +11,11 @@ module.exports = (io) => {
             let roomid = createRoom(socket.id,hostName);
             socket.join(roomid);
             //send a message for the user , with room id
-            socket.emit("roomCreated",roomid);
+            let playerData= getPlayerData(socket.id,roomid);
+            socket.emit("roomCreated",playerData);
             //send to all users data
             let data = {};
-            data=getData();
-            
+            data=getData(roomid);
             io.to(roomid).emit("roomUpdated",data);
                 })
 
@@ -23,9 +23,10 @@ module.exports = (io) => {
         socket.on('joinRoom',({playerName,roomId}) => {
             if(joinRoom(socket.id,playerName,roomId)){
             socket.join(roomId);
-            socket.emit("roomJoined");
+            let playerData=getPlayerData(socket.id,roomId);
+            socket.emit("roomJoined",playerData);
             let data ={};
-            data=getData();
+            data=getData(roomId);
             io.to(roomId).emit("roomUpdated",data);
             }
         })
@@ -35,7 +36,7 @@ module.exports = (io) => {
             const [roomId] = [...socket.rooms].filter(id => id !== socket.id);
             leaveRoom(socket.id,roomId);
             let data={};
-            data=getData();
+            data=getData(roomId);
             io.to(roomId).emit("roomUpdated",data);
         })
 

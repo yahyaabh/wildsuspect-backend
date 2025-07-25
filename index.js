@@ -23,7 +23,7 @@ const io = new Server(server, {
 
 require('./socket')(io);
 
-server.listen(PORT,()=>{
+server.listen(PORT,'0.0.0.0',()=>{
   console.log("server is running on port " + PORT);
 })
 

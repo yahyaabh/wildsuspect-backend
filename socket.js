@@ -30,6 +30,14 @@ module.exports = (io) => {
             io.to(roomId).emit("roomUpdated",data);
             }
         })
+        //handle leaving room
+        socket.on("leaveRoom", ()=> {
+            const [roomId] = [...socket.rooms].filter(id => id !== socket.id);
+            leaveRoom(socket.id,roomId);
+            let data={};
+            data=getData(roomId);
+            io.to(roomId).emit("roomUpdated",data);
+        })
 
         //he disconnected (no need to click anything handled by lib)
         socket.on('disconnecting', () => {

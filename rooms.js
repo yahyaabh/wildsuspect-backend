@@ -65,7 +65,10 @@ let joinRoom = (playerId,playerName,roomId) => {
 let leaveRoom = (playerId,roomId) => {
     if(!rooms[roomId]) return;
     rooms[roomId].players= rooms[roomId].players.filter(p => p.id != playerId);
-    if(rooms[roomId].players.length == 0) delete rooms[roomId];   
+    if(rooms[roomId].players.length == 0) {
+        delete rooms[roomId];   
+        return;
+    }
     if (rooms[roomId].host == playerId) {   
        rooms[roomId].host = rooms[roomId].players[0].id;
     }
@@ -87,6 +90,13 @@ let getPlayerData = (playerId,roomId) => {
         playerData.knowsAnimal = playerObj.knowsAnimal;
     }
     return playerData;
+
+    // playerData = {
+    //     isHost:true,
+    //     playerId:123,
+    //     playerName:...,
+    //     knowsAnimal:true
+    // }
 }
 let getData = (roomId) => {
     return rooms[roomId];

@@ -103,4 +103,12 @@ let getData = (roomId) => {
 
 }
 
-module.exports = {createRoom,joinRoom,leaveRoom,getData,getPlayerData}
+let startGame = (roomId) => {
+    const nbofPlayers = rooms[roomId].players.length;
+    const randomIndex = Math.floor(Math.random() * nbofPlayers);
+    rooms[roomId].players[randomIndex].knowsAnimal=false;
+    return true;
+
+}
+
+module.exports = {createRoom,joinRoom,leaveRoom,getData,getPlayerData,startGame}

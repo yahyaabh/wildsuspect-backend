@@ -1,4 +1,4 @@
-const {createRoom,joinRoom,leaveRoom,getData,getPlayerData}=require("./rooms");
+const {createRoom,joinRoom,leaveRoom,getData,getPlayerData,startGame}=require("./rooms");
 
 module.exports = (io) => {
     //some user made a connection the website
@@ -37,6 +37,13 @@ module.exports = (io) => {
             let data={};
             data=getData(roomId);
             io.to(roomId).emit("roomUpdated",data);
+        })
+
+        socket.on("startgame",({roomId})=> {
+            if(startGame(roomId)){
+                let data = getData(roomId);
+                io.to(roomId).emit("gameStarted",data);
+            }
         })
 
         //he disconnected (no need to click anything handled by lib)

@@ -41,8 +41,10 @@ module.exports = (io) => {
 
         socket.on("startgame",({roomId})=> {
             if(startGame(roomId)){
-                let data = getData(roomId);
-                io.to(roomId).emit("gameStarted",data);
+                let roomData = getData(roomId);
+                let playerData = getPlayerData(socket.id,roomId);
+                socket.emit("playerDataUpdated",playerData);
+                io.to(roomId).emit("gameStarted",roomData);
             }
         })
 

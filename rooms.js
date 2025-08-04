@@ -106,9 +106,11 @@ let getData = (roomId) => {
 let startGame = (roomId) => {
     const nbofPlayers = rooms[roomId].players.length;
     const randomIndex = Math.floor(Math.random() * nbofPlayers);
-    rooms[roomId].players[randomIndex].knowsAnimal=false;
+    // Reset all players' knowsAnimal to true
+    rooms[roomId].players.forEach(player => player.knowsAnimal = true);
+    // Assign false to the selected player
+    rooms[roomId].players[randomIndex].knowsAnimal = false;
     return true;
-
 }
 
 module.exports = {createRoom,joinRoom,leaveRoom,getData,getPlayerData,startGame}

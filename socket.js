@@ -1,4 +1,4 @@
-const {createRoom,joinRoom,leaveRoom,getData,getPlayerData,startGame}=require("./rooms");
+const {createRoom,joinRoom,leaveRoom,getData,getPlayerData,startGame,voteForPlayer}=require("./rooms");
 
 module.exports = (io) => {
     //some user made a connection the website
@@ -55,6 +55,13 @@ module.exports = (io) => {
             let data={};
             data=getData(roomId);
             io.to(roomId).emit("roomUpdated",data);
+        })
+
+        //user votes from fronted
+        socket.on('playerVoted',(votedId) => {
+             const [roomId] = [...socket.rooms].filter(id => id !== socket.id);
+            let nbOfVotes = voteForPlayer(socket.id,votedId,roomId);
+            io.to(roomId).emit("userHasVoted",nbOfVotes);
         })
 
          socket.on('disconnect', () => {

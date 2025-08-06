@@ -49,8 +49,9 @@ let createRoom = (hostId,hostName) => {
     rooms[roomId] = {
         roomId:roomId,
         host: hostId,
-        players: [{id: hostId,name: hostName,knowsAnimal:true}],
+        players: [{id: hostId,name: hostName,knowsAnimal:true,votedFor:"",points:0}],
         animal:animal,
+        nbOfVotes:0
     };
 
     return roomId;
@@ -58,7 +59,7 @@ let createRoom = (hostId,hostName) => {
 
 let joinRoom = (playerId,playerName,roomId) => {
       if (!rooms[roomId]) return false;
-    rooms[roomId].players.push({id:playerId,name:playerName,knowsAnimal:true});
+    rooms[roomId].players.push({id:playerId,name:playerName,knowsAnimal:true,votedFor:"",points:0});
     return true;
 }
 
@@ -113,4 +114,14 @@ let startGame = (roomId) => {
     return true;
 }
 
-module.exports = {createRoom,joinRoom,leaveRoom,getData,getPlayerData,startGame}
+const voteForPlayer = (playerId,votedId,roomId) => {
+    rooms[roomId].players.forEach(player => {
+        if(player.id == playerId){
+            player.votedFor = votedId;
+        }
+    })
+     rooms[roomId].nbOfVotes++;
+     return rooms[roomId].nbOfVotes;
+}
+
+module.exports = {createRoom,joinRoom,leaveRoom,getData,getPlayerData,startGame,voteForPlayer}

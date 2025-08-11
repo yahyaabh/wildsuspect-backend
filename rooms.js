@@ -147,4 +147,14 @@ const getAnimals = (roomId) => {
     return animalsArr;
 }
 
-module.exports = {createRoom,joinRoom,leaveRoom,getData,getPlayerData,startGame,voteForPlayer,getAnimals}
+const validateAnimal = (roomId,playerId,animal) => {
+    if(animal == rooms[roomId].animal) {
+        rooms[roomId].player.forEach((player) => {
+            if(player.id == playerId) {
+                player.points += 3;
+            }
+        })
+    }
+}
+
+module.exports = {createRoom,joinRoom,leaveRoom,getData,getPlayerData,startGame,voteForPlayer,getAnimals,validateAnimal}

@@ -1,4 +1,4 @@
-const {createRoom,joinRoom,leaveRoom,getData,getPlayerData,startGame,voteForPlayer,getAnimals}=require("./rooms");
+const {createRoom,joinRoom,leaveRoom,getData,getPlayerData,startGame,voteForPlayer,getAnimals,validateAnimal}=require("./rooms");
 
 module.exports = (io) => {
     //some user made a connection the website
@@ -75,6 +75,13 @@ module.exports = (io) => {
             const [roomId] = [...socket.rooms].filter(id => id !== socket.id);
             let arr= getAnimals(roomId);
             socket.emit("animalsArraySent",arr);
+        })
+
+        //
+        socket.on("impostorPickedAnimal",(animal) => {
+            const [roomId] = [...socket.rooms].filter(id => id !== socket.id);
+            validateAnimal(roomId,socket.id,animal);
+            io.to(roomId).emit("impostorHasGuessed");
         })
 
          socket.on('disconnect', () => {

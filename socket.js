@@ -1,4 +1,4 @@
-const {createRoom,joinRoom,leaveRoom,getData,getPlayerData,startGame,voteForPlayer}=require("./rooms");
+const {createRoom,joinRoom,leaveRoom,getData,getPlayerData,startGame,voteForPlayer,getAnimals}=require("./rooms");
 
 module.exports = (io) => {
     //some user made a connection the website
@@ -56,12 +56,25 @@ module.exports = (io) => {
             data=getData(roomId);
             io.to(roomId).emit("roomUpdated",data);
         })
+        //when client req to upadte player data
+        socket.on("updatePlayerData", () => {
+            const [roomId] = [...socket.rooms].filter(id => id !== socket.id);
+            let playerData = getPlayerData(socket.id,roomId);
+            socket.emit("playerDataUpdated",playerData);
 
+        })
         //user votes from fronted
         socket.on('playerVoted',(votedId) => {
              const [roomId] = [...socket.rooms].filter(id => id !== socket.id);
             let nbOfVotes = voteForPlayer(socket.id,votedId,roomId);
             io.to(roomId).emit("userHasVoted",nbOfVotes);
+        })
+
+
+        socket.on("impostorIsGuessing",() => {
+            const [roomId] = [...socket.rooms].filter(id => id !== socket.id);
+            let arr= getAnimals(roomId);
+            socket.emit("animalsArraySent",arr);
         })
 
          socket.on('disconnect', () => {

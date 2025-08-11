@@ -120,8 +120,31 @@ const voteForPlayer = (playerId,votedId,roomId) => {
             player.votedFor = votedId;
         }
     })
+
+    let impostorId = rooms[roomId].players.find((player) => player.knowsAnimal == false)?.id;
+    
+    if(votedId == impostorId) {
+        rooms[roomId].players.forEach((player) => {
+            if(player.id == playerId){
+                player.points = player.points+2;
+            }
+        })
+    }
      rooms[roomId].nbOfVotes++;
      return rooms[roomId].nbOfVotes;
 }
 
-module.exports = {createRoom,joinRoom,leaveRoom,getData,getPlayerData,startGame,voteForPlayer}
+const getAnimals = (roomId) => {
+    let animalsArr = [];
+    for(i=0;i<5;i++){
+        let animal = animals[Math.floor(Math.random() * animals.length)];
+        if(!animalsArr.includes(animal)){
+            animalsArr.push(animal);
+        }
+    }
+    animalsArr.push(rooms[roomId].animal);
+    animalsArr.sort(() => Math.random() - 0.5);
+    return animalsArr;
+}
+
+module.exports = {createRoom,joinRoom,leaveRoom,getData,getPlayerData,startGame,voteForPlayer,getAnimals}

@@ -108,7 +108,16 @@ let startGame = (roomId) => {
     const nbofPlayers = rooms[roomId].players.length;
     const randomIndex = Math.floor(Math.random() * nbofPlayers);
     // Reset all players' knowsAnimal to true
-    rooms[roomId].players.forEach(player => player.knowsAnimal = true);
+    rooms[roomId].players.forEach(player => {
+        player.knowsAnimal = true;
+        player.votedFor = "";
+    });
+    //choose animal
+     let index = Math.floor(Math.random() * animals.length);
+    let animal = animals[index];
+    rooms[roomId].animal=animal;
+    //
+
     // Assign false to the selected player
     rooms[roomId].players[randomIndex].knowsAnimal = false;
     return true;
@@ -149,7 +158,7 @@ const getAnimals = (roomId) => {
 
 const validateAnimal = (roomId,playerId,animal) => {
     if(animal == rooms[roomId].animal) {
-        rooms[roomId].player.forEach((player) => {
+        rooms[roomId].players.forEach((player) => {
             if(player.id == playerId) {
                 player.points += 3;
             }

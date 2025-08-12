@@ -64,7 +64,7 @@ module.exports = (io) => {
 
         })
         //user votes from fronted
-        socket.on('playerVoted',(votedId) => {
+        socket.on('playerVoted',({votedId}) => {
              const [roomId] = [...socket.rooms].filter(id => id !== socket.id);
             let nbOfVotes = voteForPlayer(socket.id,votedId,roomId);
             io.to(roomId).emit("userHasVoted",nbOfVotes);
@@ -78,10 +78,18 @@ module.exports = (io) => {
         })
 
         //
-        socket.on("impostorPickedAnimal",(animal) => {
+        socket.on("impostorPickedAnimal",({animal}) => {
             const [roomId] = [...socket.rooms].filter(id => id !== socket.id);
             validateAnimal(roomId,socket.id,animal);
             io.to(roomId).emit("impostorHasGuessed");
+        })
+
+        //
+        socket.on("getResults", () => {
+             const [roomId] = [...socket.rooms].filter(id => id !== socket.id);
+            let data={};
+            data=getData(roomId);
+            io.to(roomId).emit("roomUpdated",data);
         })
 
          socket.on('disconnect', () => {

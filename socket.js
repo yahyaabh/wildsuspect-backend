@@ -91,6 +91,11 @@ module.exports = (io) => {
             data=getData(roomId);
             io.to(roomId).emit("roomUpdated",data);
         })
+        //handle play again
+        socket.on("playAgain", () => {
+        const [roomId] = [...socket.rooms].filter(id => id !== socket.id);
+        io.to(roomId).emit("playingAgain");    
+        })
 
          socket.on('disconnect', () => {
             console.log(`Socket disconnected: ${socket.id}`);

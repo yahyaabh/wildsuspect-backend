@@ -106,6 +106,7 @@ let getData = (roomId) => {
 
 let startGame = (roomId) => {
     const nbofPlayers = rooms[roomId].players.length;
+    rooms[roomId].nbOfVotes = 0;
     const randomIndex = Math.floor(Math.random() * nbofPlayers);
     // Reset all players' knowsAnimal to true
     rooms[roomId].players.forEach(player => {

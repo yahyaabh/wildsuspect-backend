@@ -152,7 +152,9 @@ const getAnimals = (roomId) => {
             animalsArr.push(animal);
         }
     }
-    animalsArr.push(rooms[roomId].animal);
+    if(!animalsArr.includes(rooms[roomId].animal)){
+        animalsArr.push(rooms[roomId].animal);
+    }
     animalsArr.sort(() => Math.random() - 0.5);
     return animalsArr;
 }
